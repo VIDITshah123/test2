@@ -191,7 +191,6 @@ test.describe('RSVP Website Tests', () => {
     const errorElements = await page.locator('[role="alert"], .error, .alert, .message-error').count();
     expect(errorElements).toBe(0);
   });
-});
   // Add more test cases based on the website's functionality
   // Example:
   // test('should navigate to events page', async () => {
