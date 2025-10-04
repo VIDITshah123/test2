@@ -72,25 +72,10 @@ test.describe('RSVP Website Tests', () => {
     });
   });
 
-  test.afterEach(async ({}, testInfo) => {
-    // Capture screenshot on failure
+  test.afterEach(async ({ page }, testInfo) => {
     if (testInfo.status !== testInfo.expectedStatus) {
       const screenshot = await page.screenshot({ fullPage: true });
       await testInfo.attach('screenshot', { body: screenshot, contentType: 'image/png' });
-      
-      // Log console errors
-      const consoleLogs = await page.evaluate(() => {
-        return Array.from(window.console.getEntries())
-          .filter(entry => entry.type === 'error')
-          .map(entry => ({
-            message: entry.message,
-            stack: entry.stack
-          }));
-      });
-      
-      if (consoleLogs.length > 0) {
-        console.error('Browser console errors:', JSON.stringify(consoleLogs, null, 2));
-      }
     }
     
     // Close context (and all pages)
@@ -103,6 +88,7 @@ test.describe('RSVP Website Tests', () => {
     testInfo.annotations.push({ type: 'test', description: 'Verify homepage loads successfully' });
     
     // Basic page checks
+    await expect(page.locator('h2:has-text("EmployDEX")')).toBeVisible();
     await expect(page).toHaveTitle(/RSVP|Hiring Tests/);
     await expect(page).toHaveURL(process.env.SITE_URL);
     
